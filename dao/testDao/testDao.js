@@ -10,7 +10,6 @@ test = (fn) =>{
     })
 }
 
-
 module.exports = {
     test,
 }

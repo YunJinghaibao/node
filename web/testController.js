@@ -8,12 +8,13 @@ test = (req, res) => {
 }
 testo = (req, res) => {
     testDao.test((results) => {
-        res.header('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8');
-        if (req.body.name == 'haibao' && req.body.age == 1) {
-            res.send(results);
-        } else {
-            res.send('error');
-        }
+        // res.header('Content-Type', 'application/x-www-form-urlencoded;charset=utf-8');
+        // if (req.body.name == 'haibao' && req.body.age == 1) {
+        //     res.send(results);
+        // } else {
+        //     res.send('error');
+        // }
+        res.send(results);
     })
 }
 
