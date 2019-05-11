@@ -1,4 +1,5 @@
 const testDao = require('../dao/testDao/testDao');
+const testService = require('../service/test.service');
 let path = new Map();
 
 test = (req, res) => {
@@ -7,10 +8,11 @@ test = (req, res) => {
     })
 }
 testo = (req, res) => {
-    console.log('111');
-    console.log(req.body[0]);
-    testDao.test((results) => {
-        res.send(results);
+    // testDao.test((results) => {
+    //     res.send(results);
+    // })
+    testService.test(req, (res) => {
+        res.send(res);
     })
 }
 
