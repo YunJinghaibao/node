@@ -25,9 +25,9 @@ app.all('*', (req, res, next) => {
         res.send('OPTIONS');
     }else{
         console.log(new Date().toLocaleString());
-        console.log('query'); // get请求参数
+        console.log('query：'); // get请求参数
         console.log(req.query);
-        console.log('body');// post请求参数
+        console.log('body：');// post请求参数
         console.log(req.body);
         next();
     }
