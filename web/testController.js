@@ -8,11 +8,12 @@ test = (req, res) => {
     })
 }
 testo = (req, res) => {
-    // testDao.test((results) => {
-    //     res.send(results);
-    // })
-    testService.test(req, (res) => {
-        res.send(res);
+    testService.test(req, (results, status) => {
+        if(status){
+            res.status(status).send(results)
+        } else{
+            res.status(200).send(results);
+        }
     })
 }
 
