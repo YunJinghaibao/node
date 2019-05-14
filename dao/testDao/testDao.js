@@ -1,15 +1,23 @@
-const con = require('../index');
+const db = require('../index');
 
 test = (fn) =>{
     let query = "SELECT * from user";
-    con.query(query, (error, results, fields) => {
+    db.inquire(query ,(error, results) =>{
         if(error){
-            throw new Error('数据库连接函数test错误:' + error);
-        };
-        fn(results);
+            fn(error, null)
+            return;
+        }
+        fn(null, results);
+    })
+}
+
+test1 = ([], fn) => {
+    db.ADC((connection) => {
+
     })
 }
 
 module.exports = {
     test,
+    test1,
 }
