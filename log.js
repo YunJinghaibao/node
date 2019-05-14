@@ -13,9 +13,15 @@ function productLog(txt){
     fs.writeFile(logName, data, {flag : 'a'}, function(){});
 }
 
-test = (txt) => {
+const test = (txt) => {
     let logName = globalConfig.log_path + '/' + 'test.log';
     let data = txt + ' ' +'时间为：' + time.logTime() + '\r\n';
+    fs.writeFile(logName, data, {flag : 'a'}, function(){});
+}
+
+const dao = (error) => {
+    let logName = globalConfig.log_path + '/' + 'dao.log';
+    let data = error + ' ' +'时间为：' + time.logTime() + '\r\n';
     fs.writeFile(logName, data, {flag : 'a'}, function(){});
 }
 
@@ -23,4 +29,5 @@ module.exports = {
     serviceLog : serviceLog,
     productLog : productLog,
     test,
+    dao,
 }

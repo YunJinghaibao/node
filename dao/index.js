@@ -3,11 +3,11 @@ node-mysql事务处理封装，用于对数据库的增、删、改
 参考： https://blog.csdn.net/zzwwjjdj1/article/details/52035600
 参考： https://blog.csdn.net/ul646691993/article/details/52144006
 参考： https://www.jianshu.com/p/cfa013bbcabb
-进一步封装，使用ES7中方额async函数
 暴露两个函数，inquire用于查询，ADC(Additions, deletions and changes)
 */
 const mysql = require('mysql');
-const config = require('./mysql-config');
+const config = require('../config/mysql-config');
+const log = require('../log').dao;
 const pool = mysql.createPool({
     connectionLimit: 10,
     host: config.host,
@@ -16,7 +16,8 @@ const pool = mysql.createPool({
     password: config.password,
     database: config.database,
 })
-inquire = (sql ,callback) => {
+// 普通查询，随机调用connection，用完自动释放connection
+const inquire = (sql ,callback) => {
     pool.query(sql, (error, results, fields) =>{
         if(error){
             callback(error, null);
@@ -25,13 +26,14 @@ inquire = (sql ,callback) => {
         callback(null ,results)
     })
 }
-ADC = (callback) => {
+// 特定查询，手动创建connection，可保证多条查询在同一个connection里面执行，出错可回滚，需手动释放connection
+const ADC = (tasks, callback) => {
     pool.getConnection((error, connection) => {
         if(error){
-            callback(null);
+            callback(error, null);
             return;
         }
-        callback(connection);
+
     })
 }
 
