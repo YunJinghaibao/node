@@ -2,7 +2,7 @@ const testDao = require('../dao/testDao/testDao');
 
 const test = (req, fn) => {
     new Promise((resolve, reject) => {
-        testDao.test1((error ,results) => {
+        testDao.test((error ,results) => {
             if (req.body && !error) {
                 resolve(results);
             } else {
