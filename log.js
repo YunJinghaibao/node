@@ -1,5 +1,5 @@
 let fs = require("fs");
-let globalConfig = require("./conf");
+let globalConfig = require("./config");
 let time = require('./util/date');
 
 function serviceLog(txt){

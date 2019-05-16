@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const history = require('connect-history-api-fallback');
 const multer = require('multer');
 
-const config = require('./conf');
+const config = require('./config');
 const log = require('./log');
 const interface = require('./interface')
 
@@ -32,7 +32,6 @@ app.all('*', (req, res, next) => {
         next();
     }
 });
-
 interface(app);//接口文件统一分配
 
 

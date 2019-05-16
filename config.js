@@ -2,7 +2,7 @@
 const fs = require("fs");
 let globalConfig = {};
 
-let conf = fs.readFileSync('config/server.conf');
+let conf = fs.readFileSync('config/project.conf');
 let configArr = conf.toString().split("\r\n");
 for(let i = 0; i < configArr.length; i ++){
     globalConfig[configArr[i].split('=')[0]] = configArr[i].split('=')[1];
