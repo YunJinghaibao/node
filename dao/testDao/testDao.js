@@ -24,7 +24,7 @@ const test2 = ({}, fn) => {
 }
 
 const test = (query, fn) => {
-    console.log(query);
+    console.log(query.name);
     db.ADC(connection => {
         connection.beginTransaction(error => {
             if(error){
@@ -79,7 +79,6 @@ const test = (query, fn) => {
     })
 }
 const testo = (query, fn) => {
-    console.log(query);
     db.ADC(connection => {
         connection.beginTransaction(error => {
             if(error){
