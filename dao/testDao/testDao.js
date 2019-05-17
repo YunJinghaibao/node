@@ -44,7 +44,7 @@ const test = (query, fn) => {
                 });
                 const task2 = new Promise((resolve, reject) => {
                     let sql = "SELECT * FROM `user` WHERE id = ?";
-                    let data = [query.id];
+                    let data = [query.age];
                     connection.query(sql, data, (error, results, fields) => {
                         if(error){
                             reject(error);
