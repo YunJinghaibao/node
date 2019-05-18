@@ -42,6 +42,8 @@ const inquireByQuery = (sql, data, callback) => {
 }
 
 // 特定查询，手动创建connection，可保证多条查询在同一个connection里面执行，出错可回滚，需手动释放connection
+// 插入(INSERT)、修改(UPDATE)、删除(DELETE)操作成功可由results.protocol41是否为true来判断，插入(INSERT)后的数据
+// id可由results.insertid获得
 const ADC = async (callback) => {
     const getConnection = () => new Promise((resolve, reject) => {
         pool.getConnection((error, connection) => {
@@ -57,8 +59,17 @@ const ADC = async (callback) => {
     callback(connection);
 }
 
+//TODO 写一个class，事务处理封装
+class Transaction {
+    constructor(tasks){
+        this.tasks = tasks;
+    }
+}
+
+
 module.exports = {
     inquireAll,
     inquireByQuery,
     ADC,
+    Transaction,
 }
