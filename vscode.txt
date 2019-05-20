@@ -79,3 +79,16 @@ vscode-icons	文件图标，方便定位文件
 vscode-random	随机字符串生成器
 vscode-styled-components	styled-components高亮支持
 vscode-styled-jsx	styled-jsx高亮支持
+
+
+
+
+module.exports = class MySQLConfig {
+    constructor(){
+        this.host = 'localhost';
+        this.user = 'root';
+        this.port = '3306';
+        this.password = '123456';
+        this.database = 'project';
+    }
+}

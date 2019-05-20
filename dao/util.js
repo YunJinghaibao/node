@@ -1,75 +1,119 @@
 /*
-node-mysql事务处理封装，用于对数据库的增、删、改
 参考： https://blog.csdn.net/zzwwjjdj1/article/details/52035600
-参考： https://blog.csdn.net/ul646691993/article/details/52144006
 参考： https://www.jianshu.com/p/cfa013bbcabb
 参考： https://www.cnblogs.com/ysk123/p/10221963.html
-暴露两个函数，inquire用于查询，ADC(Additions, deletions and changes)
+插入(INSERT)、修改(UPDATE)、删除(DELETE)操作成功可由results.protocol41是否为true来判断，插入(INSERT)后的数据
+id可由results.insertid获得
 */
 const mysql = require('mysql');
-const config = require('../config/mysql-config');
-const log = require('../log').dao;
-const pool = mysql.createPool({
-    connectionLimit: 10,
-    host: config.host,
-    user: config.user,
-    port: config.port,
-    password: config.password,
-    database: config.database,
-})
-
-// 普通查询，随机调用connection，用完自动释放connection
-// 查询全部 >>>> "select * from XXX";
-const inquireAll = (sql, callback) => {
-    pool.query(sql, (error, results, fields) => {
-        if (error) {
-            callback(error, null);
-            return;
-        }
-        callback(null, results)
-    })
-}
-
-// 带条件查询
-const inquireByQuery = (sql, data, callback) => {
-    pool.query(sql, data, (error, results, fields) => {
-        if (error) {
-            callback(error, null);
-            return;
-        }
-        callback(null, results)
-    })
-}
-
-// 特定查询，手动创建connection，可保证多条查询在同一个connection里面执行，出错可回滚，需手动释放connection
-// 插入(INSERT)、修改(UPDATE)、删除(DELETE)操作成功可由results.protocol41是否为true来判断，插入(INSERT)后的数据
-// id可由results.insertid获得
-const ADC = async (callback) => {
-    const getConnection = () => new Promise((resolve, reject) => {
-        pool.getConnection((error, connection) => {
-            if (error) {
-                log('链接错误：' + error.stack + '\n' + '链接ID：' + connection.threadId);
-                reject(error);
-            } else {
-                resolve(connection);
+const MySQLConfig = require('../config/mysql-config');
+class DBO extends MySQLConfig {
+    constructor(){
+        super();
+        this.pool = mysql.createPool({
+            connectionLimit: 10,
+            host: this.host,
+            user: this.user,
+            port: this.port,
+            password: this.password,
+            database: this.database,
+        });
+    }
+    /* 无条件查询 */
+    uncin(sql, callback) {
+        this.pool.query(sql, (error, result, fields) => {
+            if(error){
+                callback(error, null);
+            }else {
+                callback(null, result);
             }
         })
-    })
-    const connection = await getConnection();
-    callback(connection);
-}
-
-//TODO 写一个class，事务处理封装
-class Transaction {
-    constructor(tasks){
-        this.tasks = tasks;
     }
-}
+    /* 简单条件查询 condition = [] */
+    simcin(sql, condition, callback) {
+        this.pool.query(sql, condition, (error, result, fields) => {
+            if(error){
+                callback(error, null);
+            }else {
+                callback(null, result);
+            }
+        })
+    }
+    /* 事务中各任务无联系 */
+    /* 事务connection */
+    simTran(callback) {
+        const getConnection = () => new Promise((resolve, reject) => {
+            this.pool.getConnection((error, connection) => {
+                if(error){
+                    reject('链接错误：' + error.stack + '\n' + '链接ID：' + connection.threadId);
+                }else{
+                    resolve(connection);
+                }
+            })
+        })
+        getConnection()
+        .then(connection => {
+            callback(connection);
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+    /* 执行任务函数 */
+    doTask(task, connection){
+        return new Promise((resolve, reject) => {
+            connection.query(task.sql, task.query, (error, result, field) => {
+                if(error){
+                    reject(error);
+                }else{
+                    if(result.protocol41){
+                        console.log('是插入或修改或删除操作----------------070');
+                        resolve('success');
+                    }else{
+                        console.log('是查询操作----------------------------073');
+                        resolve(result);
+                    }
+                }
+            })
+        })
+    }
+    /* 任务队列 */
+    taskQueue(taskQueue = [], callback, connection){
+        Promise.all(taskQueue)
+        .then(results => {
+            let data = [];
+            for(let result of results){
+                if(result === 'success'){
+                    console.log('插入或修改或删除成功------------------087');
+                }else{
+                    data.push(result[0]);
+                }
+            }
+            if(data.length){
+                callback(null, data);
+            }else{
+                callback(null, 'success');
+            }
+            connection.commit(error => {
+                if(error){
+                    console.log('提交失败-----------------------------099')
+                    return;
+                }
+                connection.release();
+            })
+        })
+        .catch(error => {
+            if(error){
+                console.log('出现错误，数据库回滚------------------107');
+                connection.rollback(() => {
+                    connection.release();
+                })
+            }
+        })
+    }
 
 
-module.exports = {
-    inquireAll,
-    inquireByQuery,
-    ADC,
-    Transaction,
+
 }
+
+module.exports = { DBO };
