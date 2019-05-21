@@ -21,15 +21,14 @@ const test = (query, fn) => {
                 const task2 = db.doTask({
                     // sql: "SELECT * FROM `user` WHERE id = ?",
                     // sql: "INSERT INTO `user` (name) VALUES (?)",
-                    sql: "DELETE FROM `user` WHERE id >= ?",
-                    query: [35],
+                    sql: "DELETE FROM `user` WHERE name = ?",
+                    query: ['test456'],
                 }, connection);
                 db.taskQueue([task1, task2], fn, connection);
             }
         })
     })
 }
-
 module.exports = {
     test,
     // testo,

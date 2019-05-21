@@ -45,7 +45,7 @@ class DBO extends MySQLConfig {
         const getConnection = () => new Promise((resolve, reject) => {
             this.pool.getConnection((error, connection) => {
                 if(error){
-                    reject('链接错误：' + error.stack + '\n' + '链接ID：' + connection.threadId);
+                    reject('链接错误：' + error.stack + '\n' + '链接ID：' + connection.threadId + ' ' + new Date().toLocaleString());
                 }else{
                     resolve(connection);
                 }
@@ -67,10 +67,10 @@ class DBO extends MySQLConfig {
                     reject(error);
                 }else{
                     if(result.protocol41){
-                        console.log('是插入或修改或删除操作----------------070');
+                        console.log('是插入或修改或删除操作---------------- 070 '.black.bgGreen + ' ' + new Date().toLocaleString().black.bgBlue);
                         resolve('success');
                     }else{
-                        console.log('是查询操作----------------------------073');
+                        console.log('是查询操作---------------------------- 073 '.black.bgGreen + ' ' + new Date().toLocaleString().black.bgBlue);
                         resolve(result);
                     }
                 }
@@ -84,7 +84,7 @@ class DBO extends MySQLConfig {
             let data = [];
             for(let result of results){
                 if(result === 'success'){
-                    console.log('插入或修改或删除成功------------------087');
+                    console.log('插入或修改或删除成功------------------ 087 '.black.bgGreen + ' ' + new Date().toLocaleString().black.bgBlue);
                 }else{
                     data.push(result[0]);
                 }
@@ -96,7 +96,7 @@ class DBO extends MySQLConfig {
             }
             connection.commit(error => {
                 if(error){
-                    console.log('提交失败-----------------------------099')
+                    console.log('提交失败----------------------------- 099 '.black.bgGreen + ' ' + new Date().toLocaleString().black.bgBlue);
                     return;
                 }
                 connection.release();
@@ -104,16 +104,13 @@ class DBO extends MySQLConfig {
         })
         .catch(error => {
             if(error){
-                console.log('出现错误，数据库回滚------------------107');
+                console.log('出现错误，数据库回滚------------------ 107 '.black.bgGreen + ' ' + new Date().toLocaleString().black.bgBlue);
                 connection.rollback(() => {
                     connection.release();
                 })
             }
         })
     }
-
-
-
 }
 
 module.exports = { DBO };

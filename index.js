@@ -4,6 +4,8 @@ const cookieParser = require('cookie-parser');
 const history = require('connect-history-api-fallback');
 const multer = require('multer');
 
+const color = require('colors');
+
 const config = require('./config');
 const log = require('./log');
 const interface = require('./interface')
@@ -33,9 +35,11 @@ app.all('*', (req, res, next) => {
     }
 });
 interface(app);//接口文件统一分配
-
-
 app.listen(config.port, () => {
-    log.serviceLog('端口:' + config.port)
-    console.log('服务已启动,端口:' + config.port)
+    // console.log(`
+    //     ${' 测试测试测试测试 '.black.bgBlue}
+    // `)
+    console.log(`
+        ${'Sever is running at:'.black.bgGreen} ${'192.168.31.30:'.bgBlue.black + config.port.bgBlue.black}
+    `)
 });
