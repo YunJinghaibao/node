@@ -9,26 +9,31 @@ const db = new DBO();
 // let sql = "INSERT INTO `user` (name) VALUES (?)"
 // let data = ["haibaotest"];
 const test = (query, fn) => {
-    db.simTran(connection => {
-        connection.beginTransaction(error => {
-            if(error){
-                fn(error, null);
-            }else{
-                const task1 = db.doTask({
-                    sql: "SELECT * FROM `user` WHERE name = ?",
-                    query: [query.name],
-                }, connection);
-                const task2 = db.doTask({
-                    // sql: "SELECT * FROM `user` WHERE id = ?",
-                    // sql: "INSERT INTO `user` (name) VALUES (?)",
-                    sql: "DELETE FROM `user` WHERE name = ?",
-                    query: ['test456'],
-                }, connection);
-                db.taskQueue([task1, task2], fn, connection);
-            }
-        })
-    })
+    let sql = "SELECT * FROM `user` WHERE name = ?";
+    let data = [query.name];
+    db.simcin(sql, data, fn);
 }
+// const test = (query, fn) => {
+//     db.simTran(connection => {
+//         connection.beginTransaction(error => {
+//             if(error){
+//                 fn(error, null);
+//             }else{
+//                 const task1 = db.doTask({
+//                     sql: "SELECT * FROM `user` WHERE name = ?",
+//                     query: [query.name],
+//                 }, connection);
+//                 const task2 = db.doTask({
+//                     sql: "SELECT * FROM `user` WHERE id  ?",
+//                     // sql: "INSERT INTO `user` (name) VALUES (?)",
+//                     // sql: "DELETE FROM `user` WHERE name = ?",
+//                     query: [2],
+//                 }, connection);
+//                 db.taskQueue([task1, task2], fn, connection);
+//             }
+//         })
+//     })
+// }
 module.exports = {
     test,
     // testo,
