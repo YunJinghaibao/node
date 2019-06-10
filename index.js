@@ -24,23 +24,20 @@ app.all('*', (req, res, next) => {
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('X-XSS-Protection', '1; mode=block');
     res.header('X-Powered-By', 'wudixingyunxing');
-    // if(req.method === 'OPTIONS'){
-    //     res.send('OPTIONS');
-    // }else{
-        // console.log(new Date().toLocaleString());
-        // console.log('query：'); // get请求参数
-        // console.log(req.query);
-        // console.log('body：');// post请求参数
-        // console.log(req.body);
-        // next();
-    // }
-    res.status(200).send('error');
+    if(req.method === 'OPTIONS'){
+        res.send('OPTIONS');
+    }else{
+        console.log(new Date().toLocaleString());
+        console.log('query：'); // get请求参数
+        console.log(req.query);
+        console.log('body：');// post请求参数
+        console.log(req.body);
+        next();
+    }
+    // res.status(200).send('error');
 });
 interface(app);//接口文件统一分配
 app.listen(config.port, () => {
-    // console.log(`
-    //     ${' 测试测试测试测试 '.black.bgBlue}
-    // `)
     console.log(`
         ${'Sever is running at:'.black.bgGreen} ${'192.168.31.30:'.bgBlue.black + config.port.bgBlue.black}
     `)
