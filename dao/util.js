@@ -1,4 +1,7 @@
 /*
+参考： https://blog.csdn.net/zzwwjjdj1/article/details/52035600
+参考： https://www.jianshu.com/p/cfa013bbcabb
+参考： https://www.cnblogs.com/ysk123/p/10221963.html
 插入(INSERT)、修改(UPDATE)、删除(DELETE)操作成功可由results.protocol41是否为true来判断，插入(INSERT)后的数据
 id可由results.insertid获得
 */
