@@ -3,7 +3,7 @@ module.exports = class MySQLConfig {
         this.host = 'localhost';
         this.user = 'root';
         this.port = '3306';
-        this.password = '123456';
+        this.password = 'jy1224';
         this.database = 'project';
     }
 }
