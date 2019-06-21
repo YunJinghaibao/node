@@ -1,2 +1,3 @@
 # node
-一个node小demo
+node后端web服务
+实现从接口到controller到service到dao到数据库整个流程
